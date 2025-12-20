@@ -13,14 +13,14 @@ client.once("ready", () =>{
 client.on("interactionCreate", async interaction =>{
     if (!interaction.isChatInputCommand()) return
     if(interaction.commandName !== "stm") return
-
-    await interaction.deferReply()
+    
+    await interaction.deferReply() //possible timeout gotta check new imp for ephemeral false
 
     try{
         const data = await fetchStmAlerts()
         const alerts = filterMetroAlerts(data.alerts)
 
-        if(alert.length === 0){
+        if(alerts.length === 0){
             await interaction.editReply("Aucun problème sur les lignes de métro!")
             return
         }
