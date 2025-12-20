@@ -23,7 +23,7 @@ function isMetroAlert(alert: StmAlert): boolean{
 
 function isNormalService(alert: StmAlert): boolean{
     const text = getFrenchText(alert.description_texts).toLowerCase()
-    return text.includes("Service normal") //unchanged for 2+ years why bother
+    return text.includes("service normal") //unchanged for 2+ years why bother
 }
 
 //etc, par ex we can add interactive choice later which will basically mean more funcs
