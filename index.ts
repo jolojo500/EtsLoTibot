@@ -11,6 +11,7 @@ client.once("ready", () =>{
     console.log(`Logged in as ${client.user?.tag}`) //da bot
 
     setInterval(() => {
+        console.log("routine check")
         autoCheckStm(client).catch(console.error)
     }, 5* 60 * 1000); //chaque 5 min hopefully that means less lag but no sleep
 })
