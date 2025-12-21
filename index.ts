@@ -2,6 +2,7 @@ import {Client , GatewayIntentBits} from "discord.js"
 import { fetchStmAlerts } from "./stm/stm.api.js"
 import { filterMetroAlerts } from "./stm/stm.filters.js"
 import {autoCheckStm} from "./antiSleep.js"
+import express from "express"
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
@@ -10,7 +11,7 @@ const client = new Client({
 client.once("ready", () =>{
     console.log(`Logged in as ${client.user?.tag}`) //da bot
 
-    setInterval(() => {
+    setInterval(() => { //TODO since express needed actual schedule instead then (no need for it potentially to keep runing)
         console.log("routine check")
         autoCheckStm(client).catch(console.error)
     }, 5* 60 * 1000); //chaque 5 min hopefully that means less lag but no sleep
@@ -44,3 +45,13 @@ client.on("interactionCreate", async interaction =>{
 })
 
 client.login(process.env.DISCORD_TOKEN) //env node(os) level iirc not file
+
+
+
+const app = express();
+app.get("/health", (req, res) => {
+  res.send("Bot is running");
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Health endpoint listening on port ${port}`));
