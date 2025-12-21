@@ -1,6 +1,7 @@
 import {Client , GatewayIntentBits} from "discord.js"
 import { fetchStmAlerts } from "./stm/stm.api.js"
 import { filterMetroAlerts } from "./stm/stm.filters.js"
+import {autoCheckStm} from "./antiSleep.js"
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
@@ -8,6 +9,10 @@ const client = new Client({
 
 client.once("ready", () =>{
     console.log(`Logged in as ${client.user?.tag}`) //da bot
+
+    setInterval(() => {
+        autoCheckStm(client).catch(console.error)
+    }, 5* 60 * 1000); //chaque 5 min hopefully that means less lag but no sleep
 })
 
 client.on("interactionCreate", async interaction =>{
