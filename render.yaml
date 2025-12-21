@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: stm-discord-bot
+    name: EtsLoTiBot
     env: node
     plan: free
     branch: main
