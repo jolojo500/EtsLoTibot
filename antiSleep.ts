@@ -17,7 +17,7 @@ export async function autoCheckStm(client: Client){
       const key = JSON.stringify(alert.description_texts);
       const lastSent = lastAlertsCache.get(key);
 
-      if(!lastSent || now - lastSent > 30 * 60 * 1000){ //if never been sent or older than 30mins
+      if(!lastSent || now - lastSent > 180 * 60 * 1000){ //if never been sent or older than 30mins
         lastAlertsCache.set(key, now);
         return true;
       }
