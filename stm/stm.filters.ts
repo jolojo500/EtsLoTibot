@@ -9,7 +9,16 @@ export function filterMetroAlerts(alerts: StmAlert[]) : StmAlert[]{
 }
 
 
-
+export function getLineColor(alert: StmAlert): number{
+        const lineColors = {
+            "1": 0x009E60,  // Verte
+            "2": 0xFF6A13,  // Orange  
+            "4": 0xFFD900,  // Jaune
+            "5": 0x0069AA   // Bleue
+        }
+        const line = alert.informed_entities[0]?.route_short_name
+        return lineColors[line as keyof typeof lineColors] || 0xFF0000
+    }
 
 function getFrenchText(texts: StmText[]): string{
     return texts.find(t=> t.language === "fr")?.text ?? ""

@@ -1,6 +1,6 @@
-import {Client , GatewayIntentBits} from "discord.js"
+import {Client , EmbedBuilder, GatewayIntentBits} from "discord.js"
 import { fetchStmAlerts } from "./stm/stm.api.js"
-import { filterMetroAlerts } from "./stm/stm.filters.js"
+import { filterMetroAlerts, getLineColor } from "./stm/stm.filters.js"
 import {autoCheckStm} from "./antiSleep.js"
 import express from "express"
 
@@ -31,13 +31,25 @@ client.on("interactionCreate", async interaction =>{
             await interaction.editReply("Aucun problème sur les lignes de métro!")
             return
         }
+        const embeds = alerts.map(alert => {
+            const fr = alert.description_texts.find(t => t.language === "fr")?.text
+            return new EmbedBuilder()
+                .setColor(getLineColor(alert))
+                .setTitle("🚨 Alerte Métro STM")
+                .setDescription(fr ||"Problème détecté")
+                .setTimestamp()
+                .setFooter({text: "STM info"})
+        })
 
         const message = alerts.map(alert => {
             const fr = alert.description_texts.find(t => t.language === "fr")?.text
             return `🚨 ${fr} 🚨 `
         }).join("\n\n")
 
-        await interaction.editReply(message)
+        await interaction.editReply({
+            //content: message,
+            embeds
+        })
     } catch (err) {
         console.error(err)
         await interaction.editReply("Erreur lors de la récupération des données STM.")

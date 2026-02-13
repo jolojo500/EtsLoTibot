@@ -1,6 +1,6 @@
-import { type Client, ChannelType } from "discord.js";
+import { type Client, ChannelType, EmbedBuilder } from "discord.js";
 import { fetchStmAlerts } from "./stm/stm.api.js";
-import { filterMetroAlerts } from "./stm/stm.filters.js";
+import { filterMetroAlerts, getLineColor } from "./stm/stm.filters.js";
 
 
 const lastAlertsCache = new Map<string, number>(); //"id"(lets say) , timestamp
@@ -30,13 +30,30 @@ export async function autoCheckStm(client: Client){
     const channel = await client.channels.fetch(process.env.CHANNEL_ID!)
     if(channel?.type !== ChannelType.GuildText) return
 
+    const embeds = newAlerts.map(alert => {
+      const fr = alert.description_texts.find(t => t.language === "fr")?.text
+      return new EmbedBuilder()
+          .setColor(getLineColor(alert))
+          .setTitle("🚨 Alerte Métro STM")
+          .setDescription(fr ||"Problème détecté")
+          .setTimestamp()
+          .setFooter({text: "STM info"})
+    })
+
+    await channel.send({
+            //content: message,
+            embeds
+        })
+
     //was alerts before handling of dupes
-    const msg = newAlerts.map(a =>
+    /*const msg = newAlerts.map(a =>
         a.description_texts.find(t=> t.language === "fr")?.text
     ).join("\n\n")
-
+    
     await channel.send(`🚨 **Alertes STM**\n${msg}`)
-}
+            */
+
+    }
 
 
 function isPeakHour(date = new Date()) {
